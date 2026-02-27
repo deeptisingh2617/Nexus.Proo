@@ -1,0 +1,61 @@
+/* --- Root Variable Tokens --- */
+:root[data-theme="light"] {
+    --bg-body: #f8fafc;
+    --bg-card: #ffffff;
+    --primary: #4f46e5;
+    --primary-glow: rgba(79, 70, 229, 0.1);
+    --text-main: #0f172a;
+    --text-muted: #64748b;
+    --border: #e2e8f0;
+    --shadow: 0 10px 15px -3px rgba(0,0,0,0.05);
+}
+
+:root[data-theme="dark"] {
+    --bg-body: #020617;
+    --bg-card: #1e293b;
+    --primary: #818cf8;
+    --primary-glow: rgba(129, 140, 248, 0.2);
+    --text-main: #f1f5f9;
+    --text-muted: #94a3b8;
+    --border: #334155;
+    --shadow: 0 10px 15px -3px rgba(0,0,0,0.4);
+}
+
+/* --- Layout Engine --- */
+body {
+    background-color: var(--bg-body);
+    color: var(--text-main);
+    transition: background 0.4s ease, color 0.4s ease;
+}
+
+/* Glassmorphic Room Cards */
+.card {
+    background: var(--bg-card);
+    border-radius: 28px;
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow);
+    padding: 1.8rem;
+    transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.card:hover {
+    transform: translateY(-10px);
+    border-color: var(--primary);
+}
+
+/* Emergency System Styling */
+#broadcast {
+    background: #ef4444;
+    color: white;
+    padding: 12px;
+    border-radius: 12px;
+    text-align: center;
+    font-weight: 800;
+    animation: pulse-red 2s infinite;
+}
+
+@keyframes pulse-red {
+    0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); }
+    70% { transform: scale(1.01); box-shadow: 0 0 0 10px rgba(239, 68, 68, 0); }
+    100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+}

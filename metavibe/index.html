@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nexus Pro | Next-Gen Campus Ecosystem</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        /* --- CSS THEME ENGINE --- */
+        :root[data-theme="light"] {
+            --bg-body: #f8fafc;
+            --bg-card: #ffffff;
+            --primary: #4f46e5;
+            --primary-glow: rgba(79, 70, 229, 0.1);
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+            --shadow: 0 10px 15px -3px rgba(0,0,0,0.05);
+            --accent: #f59e0b;
+        }
+
+        :root[data-theme="dark"] {
+            --bg-body: #020617;
+            --bg-card: #1e293b;
+            --primary: #818cf8;
+            --primary-glow: rgba(129, 140, 248, 0.2);
+            --text-main: #f1f5f9;
+            --text-muted: #94a3b8;
+            --border: #334155;
+            --shadow: 0 10px 15px -3px rgba(0,0,0,0.4);
+            --accent: #fbbf24;
+        }
+
+        /* --- CORE LAYOUT --- */
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; transition: all 0.3s ease; }
+        body { background-color: var(--bg-body); color: var(--text-main); padding: 1.5rem; overflow-x: hidden; }
+        .container { max-width: 1300px; margin: 0 auto; }
+
+        /* Navigation & Header */
+        .navbar {
+            background: var(--bg-card);
+            padding: 1rem 2rem;
+            border-radius: 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border: 1px solid var(--border);
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow);
+        }
+
+        .theme-toggle {
+            cursor: pointer;
+            width: 45px; height: 45px;
+            border-radius: 12px;
+            background: var(--bg-body);
+            border: 1px solid var(--border);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.2rem;
+        }
+
+        /* Emergency Broadcast */
+        #broadcast {
+            display: none;
+            background: #ef4444;
+            color: white;
+            padding: 12px;
+            text-align: center;
+            font-weight: 800;
+            border-radius: 12px;
+            margin-bottom: 1.5rem;
+            animation: pulse-red 2s infinite;
+        }
+
+        @keyframes pulse-red { 0% { opacity: 1; } 50% { opacity: 0.7; } 100% { opacity: 1; } }
+
+        /* Stats Dashboard */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2.5rem;
+        }
+
+        .stat-card {
+            background: var(--bg-card);
+            padding: 1.5rem;
+            border-radius: 20px;
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow);
+            text-align: center;
+        }
+
+        .stat-card h2 { font-size: 2.2rem; font-weight: 800; color: var(--primary); }
+        .stat-card p { font-size: 0.75rem; color: var(--text-muted); font-weight: 700; text-transform: uppercase; }
+
+        /* Room Cards */
+        .room-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 1.5rem; }
+        
+        .card {
+            background: var(--bg-card);
+            padding: 1.8rem;
+            border-radius: 28px;
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow);
+            position: relative;
+            display: flex; flex-direction: column; gap: 10px;
+        }
+
+        .card:hover { transform: translateY(-8px); border-color: var(--primary); }
+
+        .tag-row { display: flex; gap: 5px; flex-wrap: wrap; }
+        .tag { font-size: 0.65rem; padding: 4px 8px; border-radius: 6px; font-weight: 700; background: var(--primary-glow); color: var(--primary); }
+
+        .status-pill {
+            display: inline-flex; align-items: center; gap: 8px;
+            padding: 8px 16px; border-radius: 100px; font-weight: 800; font-size: 0.8rem; margin: 10px 0;
+            width: fit-content;
+        }
+
+        .Free .status-pill { background: rgba(16, 185, 129, 0.1); color: #10b981; }
+        .Occupied .status-pill { background: rgba(239, 68, 68, 0.1); color: #ef4444; }
+
+        .maintenance-badge {
+            background: var(--accent); color: white;
+            padding: 4px 10px; border-radius: 8px; font-size: 0.65rem; font-weight: 800;
+            position: absolute; top: 20px; right: 20px;
+        }
+
+        /* Admin Controls */
+        .admin-panel {
+            display: none;
+            background: var(--primary);
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 18px;
+            margin-bottom: 2rem;
+            justify-content: space-between; align-items: center;
+        }
+
+        .btn { padding: 10px 20px; border-radius: 12px; border: none; font-weight: 800; cursor: pointer; transition: 0.2s; }
+        .btn-primary { background: var(--primary); color: white; }
+        .btn-outline { background: transparent; border: 1px solid white; color: white; }
+        .admin-btn { width: 100%; margin-top: 5px; }
+
+        /* Modal */
+        .modal {
+            position: fixed; top:0; left:0; width:100%; height:100%;
+            background: rgba(0,0,0,0.7); backdrop-filter: blur(8px);
+            display:none; justify-content:center; align-items:center; z-index:2000;
+        }
+        .modal-content { background: var(--bg-card); padding: 2.5rem; border-radius: 30px; width: 380px; text-align: center; }
+        
+        input { 
+            width: 100%; padding: 12px; border-radius: 12px; border: 1px solid var(--border); 
+            background: var(--bg-body); color: var(--text-main); margin-bottom: 1rem;
+        }
+    </style>
+</head>
+<body>
+
+<div id="loginModal" class="modal">
+    <div class="modal-content">
+        <h2 style="margin-bottom:10px">Admin Login</h2>
+        <p style="color:var(--text-muted); font-size:0.9rem; margin-bottom:20px">Enter your secure password to unlock controls.</p>
+        <input type="password" id="passInput" placeholder="Password">
+        <button onclick="login()" class="btn btn-primary" style="width:100%">Verify Credentials</button>
+        <button onclick="closeModal()" style="background:none; border:none; color:var(--text-muted); margin-top:15px; cursor:pointer;">Cancel</button>
+    </div>
+</div>
+
+<div class="container">
+    <div id="broadcast">⚠️ EMERGENCY BROADCAST: SYSTEM MAINTENANCE SCHEDULED FOR 10:00 PM</div>
+
+    <nav class="navbar">
+        <div class="logo">
+            <h1 style="font-weight:900; letter-spacing:-1.5px; font-size:1.8rem">NEXUS<span style="color:var(--primary)">.PRO</span></h1>
+        </div>
+        <div style="display:flex; gap:12px; align-items:center">
+            <div class="theme-toggle" onclick="toggleTheme()" id="themeBtn">🌙</div>
+            <div id="authGroup">
+                <button class="btn btn-primary" onclick="openModal()">Admin Login</button>
+            </div>
+        </div>
+    </nav>
+
+    <div id="adminPanel" class="admin-panel">
+        <div><strong>Command Center Active</strong> | Security Level: High</div>
+        <div style="display:flex; gap:10px">
+            <button class="btn btn-outline" onclick="toggleEmergency()">Broadcast Mode</button>
+            <button class="btn btn-outline" style="background:white; color:var(--primary)" onclick="logout()">Logout</button>
+        </div>
+    </div>
+
+    <div class="stats-grid">
+        <div class="stat-card"><p>Available</p><h2 id="freeStat">0</h2></div>
+        <div class="stat-card"><p>Occupied</p><h2 id="occStat">0</h2></div>
+        <div class="stat-card"><p>Campus Load</p><h2 id="loadStat">0%</h2></div>
+        <div class="stat-card"><p>Issues</p><h2 id="issueStat">0</h2></div>
+    </div>
+
+    <div style="margin-bottom:2rem; display:flex; gap:1rem">
+        <input type="text" id="search" placeholder="Search rooms, floors, or tags (e.g. WiFi, Quiet, ADA)..." style="margin-bottom:0">
+    </div>
+
+    <div id="roomGrid" class="room-grid"></div>
+</div>
+
+<script>
+    // --- DATABASE: 15 PROFESSIONAL ROOMS ---
+    const ADMIN_PASS = "admin123";
+    let isAdmin = false;
+    let emergencyActive = false;
+
+    let rooms = JSON.parse(localStorage.getItem('nexus_v3_db')) || [
+        { id: 1, name: "Neural Lab 01", type: "lab", floor: 1, status: "Free", tools: "RTX GPUs", tags: ["WiFi", "ADA"], issue: false },
+        { id: 2, name: "Grand Auditorium", type: "lecture", floor: 1, status: "Occupied", tools: "4K Projector", tags: ["ADA", "High Cap"], issue: false },
+        { id: 3, name: "Motion Capture Studio", type: "studio", floor: 3, status: "Free", tools: "VR Gear", tags: ["Quiet"], issue: true },
+        { id: 4, name: "Circuitry Hub", type: "lab", floor: 1, status: "Free", tools: "Oscilloscopes", tags: ["WiFi"], issue: false },
+        { id: 5, name: "Quantum Suite", type: "lab", floor: 2, status: "Occupied", tools: "Supercomputers", tags: ["Secure"], issue: false },
+        { id: 6, name: "Law Moot Court", type: "lecture", floor: 2, status: "Free", tools: "Recording", tags: ["Quiet", "ADA"], issue: false },
+        { id: 7, name: "Sound Attic", type: "studio", floor: 3, status: "Free", tools: "Mixers", tags: ["Quiet"], issue: false },
+        { id: 8, name: "Cyber Range", type: "lab", floor: 1, status: "Occupied", tools: "Servers", tags: ["Secure", "WiFi"], issue: false },
+        { id: 9, name: "Biomedical Wing", type: "lab", floor: 2, status: "Free", tools: "Microscopes", tags: ["WiFi"], issue: false },
+        { id: 10, name: "Business Loft", type: "studio", floor: 2, status: "Free", tools: "Whiteboards", tags: ["ADA"], issue: false },
+        { id: 11, name: "Robotics Pit", type: "lab", floor: 1, status: "Occupied", tools: "3D Printers", tags: ["WiFi"], issue: false },
+        { id: 12, name: "Design Studio", type: "studio", floor: 3, status: "Free", tools: "iMac Pro", tags: ["Quiet"], issue: false },
+        { id: 13, name: "Strategy Room", type: "hall", floor: 2, status: "Free", tools: "Video Link", tags: ["Secure"], issue: true },
+        { id: 14, name: "Materials Lab", type: "lab", floor: 1, status: "Occupied", tools: "Presses", tags: ["No WiFi"], issue: false },
+        { id: 15, name: "Anatomy Hall", type: "lecture", floor: 2, status: "Free", tools: "3D Models", tags: ["ADA"], issue: false }
+    ];
+
+    // --- THEME ENGINE ---
+    function toggleTheme() {
+        const root = document.documentElement;
+        const theme = root.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
+        root.setAttribute('data-theme', theme);
+        document.getElementById('themeBtn').innerText = theme === 'light' ? '🌙' : '☀️';
+        localStorage.setItem('nexus_theme', theme);
+    }
+
+    // --- AUTHENTICATION ---
+    function openModal() { document.getElementById('loginModal').style.display = 'flex'; }
+    function closeModal() { 
+        document.getElementById('loginModal').style.display = 'none';
+        document.getElementById('passInput').value = ''; 
+    }
+
+    function login() {
+        if(document.getElementById('passInput').value === ADMIN_PASS) {
+            isAdmin = true;
+            document.getElementById('adminPanel').style.display = 'flex';
+            document.getElementById('authGroup').style.display = 'none';
+            closeModal();
+            render();
+        } else { alert("Access Denied!"); }
+    }
+
+    function logout() {
+        isAdmin = false;
+        document.getElementById('adminPanel').style.display = 'none';
+        document.getElementById('authGroup').style.display = 'block';
+        document.getElementById('passInput').value = ''; 
+        render();
+    }
+
+    function toggleEmergency() {
+        emergencyActive = !emergencyActive;
+        document.getElementById('broadcast').style.display = emergencyActive ? 'block' : 'none';
+    }
+
+    // --- CORE RENDERING ---
+    function render() {
+        const grid = document.getElementById('roomGrid');
+        const search = document.getElementById('search').value.toLowerCase();
+        grid.innerHTML = '';
+        let free = 0, issues = 0;
+
+        rooms.forEach(room => {
+            const match = room.name.toLowerCase().includes(search) || 
+                          room.tags.some(t => t.toLowerCase().includes(search));
+            
+            if(match) {
+                if(room.status === "Free") free++;
+                if(room.issue) issues++;
+
+                const card = document.createElement('div');
+                card.className = `card ${room.status}`;
+                card.innerHTML = `
+                    ${room.issue ? '<span class="maintenance-badge">⚠️ ISSUE REPORTED</span>' : ''}
+                    <div class="tag-row">
+                        <span class="tag">${room.type.toUpperCase()}</span>
+                        <span class="tag">FL ${room.floor}</span>
+                        ${room.tags.map(t => `<span class="tag" style="background:var(--bg-body)">${t}</span>`).join('')}
+                    </div>
+                    <h3 style="margin-top:10px">${room.name}</h3>
+                    <p style="font-size:0.8rem; color:var(--text-muted)">Equipped: ${room.tools}</p>
+                    <div class="status-pill"><div style="width:8px; height:8px; border-radius:50%; background:currentColor"></div>${room.status}</div>
+                    
+                    <div style="display:${isAdmin ? 'grid' : 'none'}; grid-template-columns: 1fr 1fr; gap:5px">
+                        <button class="btn btn-primary admin-btn" onclick="toggleStatus(${room.id})">Toggle</button>
+                        <button class="btn admin-btn" style="background:var(--accent); color:white" onclick="toggleIssue(${room.id})">Report</button>
+                    </div>
+                `;
+                grid.appendChild(card);
+            }
+        });
+
+        document.getElementById('freeStat').innerText = free;
+        document.getElementById('occStat').innerText = rooms.length - free;
+        document.getElementById('issueStat').innerText = issues;
+        document.getElementById('loadStat').innerText = Math.round(((rooms.length - free) / rooms.length) * 100) + "%";
+    }
+
+    function toggleStatus(id) {
+        rooms = rooms.map(r => r.id === id ? {...r, status: r.status === "Free" ? "Occupied" : "Free"} : r);
+        save();
+    }
+
+    function toggleIssue(id) {
+        rooms = rooms.map(r => r.id === id ? {...r, issue: !r.issue} : r);
+        save();
+    }
+
+    function save() {
+        localStorage.setItem('nexus_v3_db', JSON.stringify(rooms));
+        render();
+    }
+
+    document.getElementById('search').addEventListener('input', render);
+    if(localStorage.getItem('nexus_theme') === 'dark') toggleTheme();
+    render();
+</script>
+</body>
+</html>
